@@ -69,3 +69,14 @@ jobs:
         run: |
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/app-rendered.yaml
+
+      - name: Check cluster status
+        run: |
+          echo "Nodes:"
+          kubectl get nodes
+          echo
+          echo "Pods in voting-app:"
+          kubectl get pods -n voting-app
+          echo
+          echo "Services in voting-app:"
+          kubectl get svc -n voting-app
