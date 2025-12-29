@@ -1,0 +1,71 @@
+name: Build and Deploy Voting App
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: eu-west-2
+      ACCOUNT_ID: "808840719419"          # <- kendi account id
+      CLUSTER_NAME: vote-eks
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::808840719419:role/github-oidc-vote-eks-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region "$AWS_REGION" \
+            | docker login \
+              --username AWS \
+              --password-stdin "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+
+      - name: Build and push images
+        run: |
+          VOTE_REPO="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/example-voting-vote"
+          RESULT_REPO="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/example-voting-result"
+          WORKER_REPO="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/example-voting-worker"
+
+          echo "Building and pushing images with tag $IMAGE_TAG"
+
+          docker build -t "$VOTE_REPO:$IMAGE_TAG"   ./vote
+          docker push    "$VOTE_REPO:$IMAGE_TAG"
+
+          docker build -t "$RESULT_REPO:$IMAGE_TAG" ./result
+          docker push    "$RESULT_REPO:$IMAGE_TAG"
+
+          docker build -t "$WORKER_REPO:$IMAGE_TAG" ./worker
+          docker push    "$WORKER_REPO:$IMAGE_TAG"
+
+          # render manifests with real image names
+          cp k8s/app.yaml k8s/app-rendered.yaml
+
+          sed -i "s|VOTE_IMAGE|$VOTE_REPO:$IMAGE_TAG|g"   k8s/app-rendered.yaml
+          sed -i "s|RESULT_IMAGE|$RESULT_REPO:$IMAGE_TAG|g" k8s/app-rendered.yaml
+          sed -i "s|WORKER_IMAGE|$WORKER_REPO:$IMAGE_TAG|g" k8s/app-rendered.yaml
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name "$CLUSTER_NAME" \
+            --region "$AWS_REGION"
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/app-rendered.yaml
