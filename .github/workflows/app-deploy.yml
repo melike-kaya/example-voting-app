@@ -14,7 +14,7 @@ jobs:
 
     env:
       AWS_REGION: eu-west-2
-      ACCOUNT_ID: "808840719419"          # <- kendi account id
+      ACCOUNT_ID: "130575395405"          # <- kendi account id
       CLUSTER_NAME: vote-eks
       IMAGE_TAG: ${{ github.sha }}
 
