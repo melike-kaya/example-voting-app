@@ -19,10 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/github-terraform-vote-eks-role
+          role-to-assume: arn:aws:iam::808840719419:role/github-oidc-vote-role
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup Terraform
