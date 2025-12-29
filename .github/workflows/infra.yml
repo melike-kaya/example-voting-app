@@ -39,10 +39,8 @@ jobs:
         run: terraform init -input=false
 
       - name: Terraform plan
-        working-directory: .
-        run: terraform plan -out=tfplan -input=false
+        run: terraform plan -input=false
 
       - name: Terraform apply
-        if: github.ref == 'refs/heads/main'
-        working-directory: .
-        run: terraform apply -input=false -auto-approve tfplan
+        run: terraform apply -input=false -auto-approve
+
