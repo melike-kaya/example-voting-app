@@ -12,17 +12,17 @@ variable "create_vpc" {
   default     = true
 }
 
-variable "region" {
-  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
-  type        = string
-  default     = null
-}
+# variable "region" {
+#   description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
+#   type        = string
+#   default     = null
+# }
 
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
+# variable "tags" {
+#   description = "A map of tags to add to all resources"
+#   type        = map(string)
+#   default     = {}
+# }
 
 ################################################################################
 # VPC
@@ -1681,19 +1681,14 @@ variable "flow_log_cloudwatch_log_group_class" {
   default     = null
 }
 
-variable "putin_khuylo" {
-  description = "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
-  type        = bool
-  default     = true
-}
 
 # EKS variables
 
-variable "create" {
-  description = "Controls if resources should be created (affects nearly all resources)"
-  type        = bool
-  default     = true
-}
+# variable "create" {
+#   description = "Controls if resources should be created (affects nearly all resources)"
+#   type        = bool
+#   default     = true
+# }
 
 variable "prefix_separator" {
   description = "The separator to use between the prefix and the generated timestamp for resource names"
@@ -1701,27 +1696,27 @@ variable "prefix_separator" {
   default     = "-"
 }
 
-variable "region" {
-  description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
-  type        = string
-  default     = null
-}
+# variable "region" {
+#   description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
+#   type        = string
+#   default     = null
+# }
 
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
-}
+# variable "tags" {
+#   description = "A map of tags to add to all resources"
+#   type        = map(string)
+#   default     = {}
+# }
 
 ################################################################################
 # Cluster
 ################################################################################
 
-variable "name" {
-  description = "Name of the EKS cluster"
-  type        = string
-  default     = ""
-}
+# variable "name" {
+#   description = "Name of the EKS cluster"
+#   type        = string
+#   default     = ""
+# }
 
 variable "kubernetes_version" {
   description = "Kubernetes `<major>.<minor>` version to use for the EKS cluster (i.e.: `1.33`)"
