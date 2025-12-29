@@ -55,7 +55,7 @@ resource "aws_subnet" "public_b" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public-b"
+    Name                             = "public-b"
     "kubernetes.io/cluster/vote-eks" = "shared"
     "kubernetes.io/role/elb"         = "1"
   }
@@ -127,7 +127,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSServicePolicy" {
 
 resource "aws_eks_cluster" "this" {
   name     = "vote-eks"
-  version  = "1.31"      # isteğine göre değiştirebilirsin
+  version  = "1.31" # isteğine göre değiştirebilirsin
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
@@ -204,9 +204,9 @@ resource "aws_eks_node_group" "default" {
 
   instance_types = ["t3.small"]
 
-  ami_type        = "AL2_x86_64"
-  capacity_type   = "ON_DEMAND"
-  disk_size       = 20
+  ami_type      = "AL2_x86_64"
+  capacity_type = "ON_DEMAND"
+  disk_size     = 20
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_node_AmazonEKSWorkerNodePolicy,
